@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WindowsFormsApplication1
+namespace ConversorGts7Geomat
 {
     static class Program
     {
@@ -16,7 +16,10 @@ namespace WindowsFormsApplication1
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            FormSplash splash = new FormSplash();
+            Application.Run(splash);
+            Form1 form1 = new Form1();
+            Application.Run(form1);
         }
     }
 }
