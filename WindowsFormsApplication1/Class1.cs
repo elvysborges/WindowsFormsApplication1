@@ -274,6 +274,12 @@ namespace ConversorGts7Geomat
                         xyzIdx = idx + 1;
                         while (xyzIdx < queue.Count && queue.ElementAt(xyzIdx).type != Gts7Type.XYZ)
                         {
+                            Gts7Line line2 = queue.ElementAt(xyzIdx);
+                            if (line2.type == Gts7Type.SS || line2.type == Gts7Type.BS)
+                            {
+                                bsName = formatName(line2.name);
+                                Console.WriteLine("Change name to: " + bsName);
+                            }
                             xyzIdx++;
                         }
                         if (xyzIdx == queue.Count)
@@ -294,6 +300,12 @@ namespace ConversorGts7Geomat
                         xyzIdx = idx + 1;
                         while (xyzIdx < queue.Count && queue.ElementAt(xyzIdx).type != Gts7Type.XYZ)
                         {
+                            Gts7Line line2 = queue.ElementAt(xyzIdx);
+                            if (line2.type == Gts7Type.SS || line2.type == Gts7Type.BS)
+                            {
+                                ssName = formatName(line2.name);
+                                Console.WriteLine("Change name to: " + ssName);
+                            }
                             xyzIdx++;
                         }
                         if (xyzIdx == queue.Count)
