@@ -221,16 +221,14 @@ namespace ConversorGts7Geomat
         public static string coordenadaGenerator(Queue<Gts7Line> queue)
         {
             StringBuilder buffer = new StringBuilder();
-            string cooLine = "";
+            string sname = null;
+            string command = null;
+
+            string cooLine = null;
             int stnCount = 0;
             int idx = 0;
             while (queue.Count > idx)
             {
-                int xyzIdx = 0;
-                Gts7Line xyzLine = null;
-                string xValue = null;
-                string yValue = null;
-                string zValue = null;
 
                 Gts7Line line = queue.ElementAt(idx);
                 switch (line.type)
@@ -238,92 +236,49 @@ namespace ConversorGts7Geomat
                     case Gts7Type.JOB:
                     case Gts7Type.INST:
                     case Gts7Type.UNITS:
-                    case Gts7Type.XYZ:
                     case Gts7Type.SD:
-                        cooLine = null;
+                        break;
+
+                    case Gts7Type.XYZ:
+                        if (command == null || sname == null)
+                        {
+                            Console.WriteLine("XYZ line found before STN, BS or SS: " + line);
+                            break;
+                        }
+                        cooLine = formatCoordLine(stnCount, sname, command, line);
+                        stnCount++;
+                        command = null;
+                        sname = null;
                         break;
 
                     case Gts7Type.STN:
-                        string sname = formatName(line.name);
+                        sname = formatName(line.name);
+                        command = "ESTACAO";
                         if (stnCount > 0)
                         {
                             cooLine = null;
                             stnCount = 0;
                             break;
                         }
-                        xyzIdx = idx + 1;
-                        while (xyzIdx < queue.Count && queue.ElementAt(xyzIdx).type != Gts7Type.XYZ)
-                        {
-                            xyzIdx++;
-                        }
-                        if (xyzIdx == queue.Count)
-                        {
-                            Console.WriteLine("Not found XYZ line after STN");
-                            cooLine = null;
-                            break;
-                        }
-                        stnCount++;
-                        idx = xyzIdx;
 
-                        cooLine = formatCoordLine(stnCount, sname, "ESTACAO", queue.ElementAt(xyzIdx));
+                        command = "ESTACAO";
                         break;
 
                     case Gts7Type.BS:
-                        string bsName = formatName(line.name);
-
-                        xyzIdx = idx + 1;
-                        while (xyzIdx < queue.Count && queue.ElementAt(xyzIdx).type != Gts7Type.XYZ)
-                        {
-                            Gts7Line line2 = queue.ElementAt(xyzIdx);
-                            if (line2.type == Gts7Type.SS || line2.type == Gts7Type.BS)
-                            {
-                                bsName = formatName(line2.name);
-                                Console.WriteLine("Change name to: " + bsName);
-                            }
-                            xyzIdx++;
-                        }
-                        if (xyzIdx == queue.Count)
-                        {
-                            Console.WriteLine("Not found XYZ line after BS");
-                            cooLine = null;
-                            break;
-                        }
-                        stnCount++;
-                        idx = xyzIdx;
-
-                        cooLine = formatCoordLine(stnCount, bsName, "RE", queue.ElementAt(xyzIdx));
+                        sname = formatName(line.name);
+                        command = "RE";
                         break;
 
                     case Gts7Type.SS:
-                        string ssName = formatName(line.name);
-                        string ssCommand = formatName(line.ssCommand);
-                        xyzIdx = idx + 1;
-                        while (xyzIdx < queue.Count && queue.ElementAt(xyzIdx).type != Gts7Type.XYZ)
-                        {
-                            Gts7Line line2 = queue.ElementAt(xyzIdx);
-                            if (line2.type == Gts7Type.SS || line2.type == Gts7Type.BS)
-                            {
-                                ssName = formatName(line2.name);
-                                Console.WriteLine("Change name to: " + ssName);
-                            }
-                            xyzIdx++;
-                        }
-                        if (xyzIdx == queue.Count)
-                        {
-                            Console.WriteLine("Not found XYZ line after SS");
-                            cooLine = null;
-                            break;
-                        }
-                        stnCount++;
-                        idx = xyzIdx;
-
-                        cooLine = formatCoordLine(stnCount, ssName, ssCommand, queue.ElementAt(xyzIdx));
+                        sname = formatName(line.name);
+                        command = formatName(line.ssCommand);
                         break;
                 }
                 if (cooLine != null)
                 {
                     Console.WriteLine(cooLine);
                     buffer.Append(cooLine + System.Environment.NewLine);
+                    cooLine = null;
                 }
                 idx++;
             }
