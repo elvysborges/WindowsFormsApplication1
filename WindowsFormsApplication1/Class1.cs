@@ -44,53 +44,56 @@ namespace ConversorGts7Geomat
 */
         static public Gts7Line processLine(string line)
         {
-            string[] lineSplited = Regex.Split(line, " +");
-            if (lineSplited.Length > 0)
+            if (line.Length > 0 && line[0] >= 32)
             {
-                string[] vv = lineSplited[1].Split(',');
-                switch (lineSplited[0])
+                string[] lineSplited = Regex.Split(line, " +");
+                if (lineSplited.Length > 0)
                 {
-                    case "JOB":
-                        Gts7Line job = new Gts7Line(Gts7Type.JOB);
-                        job.name = vv[0];
-                        return job;
-                    case "INST":
-                        Gts7Line inst = new Gts7Line(Gts7Type.INST);
-                        inst.name = vv[0];
-                        return inst;
-                    case "UNITS":
-                        Gts7Line units = new Gts7Line(Gts7Type.UNITS);
-                        units.name = vv[0];
-                        units.unit = vv[1];
-                        return units;
-                    case "STN":
-                        Gts7Line stn = new Gts7Line(Gts7Type.STN);
-                        stn.name = vv[0];
-                        stn.value1 = decimal.Parse(vv[1]);
-                        return stn;
-                    case "XYZ":
-                        Gts7Line xyz = new Gts7Line(Gts7Type.XYZ);
-                        xyz.value1 = decimal.Parse(vv[0]);
-                        xyz.value2 = decimal.Parse(vv[1]);
-                        xyz.value3 = decimal.Parse(vv[2]);
-                        return xyz;
-                    case "BS":
-                        Gts7Line bs = new Gts7Line(Gts7Type.BS);
-                        bs.name = vv[0];
-                        bs.value1 = decimal.Parse(vv[1]);
-                        return bs;
-                    case "SD":
-                        Gts7Line sd = new Gts7Line(Gts7Type.SD);
-                        sd.value1 = decimal.Parse(vv[0]);
-                        sd.value2 = decimal.Parse(vv[1]);
-                        sd.value3 = decimal.Parse(vv[2]);
-                        return sd;
-                    case "SS":
-                        Gts7Line ss = new Gts7Line(Gts7Type.SS);
-                        ss.name = vv[0];
-                        ss.value1 = decimal.Parse(vv[1]);
-                        ss.ssCommand = vv[2];
-                        return ss;
+                    string[] vv = lineSplited[1].Split(',');
+                    switch (lineSplited[0])
+                    {
+                        case "JOB":
+                            Gts7Line job = new Gts7Line(Gts7Type.JOB);
+                            job.name = vv[0];
+                            return job;
+                        case "INST":
+                            Gts7Line inst = new Gts7Line(Gts7Type.INST);
+                            inst.name = vv[0];
+                            return inst;
+                        case "UNITS":
+                            Gts7Line units = new Gts7Line(Gts7Type.UNITS);
+                            units.name = vv[0];
+                            units.unit = vv[1];
+                            return units;
+                        case "STN":
+                            Gts7Line stn = new Gts7Line(Gts7Type.STN);
+                            stn.name = vv[0];
+                            stn.value1 = decimal.Parse(vv[1]);
+                            return stn;
+                        case "XYZ":
+                            Gts7Line xyz = new Gts7Line(Gts7Type.XYZ);
+                            xyz.value1 = decimal.Parse(vv[0]);
+                            xyz.value2 = decimal.Parse(vv[1]);
+                            xyz.value3 = decimal.Parse(vv[2]);
+                            return xyz;
+                        case "BS":
+                            Gts7Line bs = new Gts7Line(Gts7Type.BS);
+                            bs.name = vv[0];
+                            bs.value1 = decimal.Parse(vv[1]);
+                            return bs;
+                        case "SD":
+                            Gts7Line sd = new Gts7Line(Gts7Type.SD);
+                            sd.value1 = decimal.Parse(vv[0]);
+                            sd.value2 = decimal.Parse(vv[1]);
+                            sd.value3 = decimal.Parse(vv[2]);
+                            return sd;
+                        case "SS":
+                            Gts7Line ss = new Gts7Line(Gts7Type.SS);
+                            ss.name = vv[0];
+                            ss.value1 = decimal.Parse(vv[1]);
+                            ss.ssCommand = vv[2];
+                            return ss;
+                    }
                 }
             }
             return null;
